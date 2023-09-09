@@ -1,0 +1,41 @@
+service: ml-model
+
+frameworkVersion: '3'
+useDotenv: true
+
+provider:
+  name: aws
+  region: ${opt:region, 'eu-west-1'}
+  stage: ${opt:stage, 'development'}
+  logRetentionInDays: 30
+  ecr:
+    images:
+      appimage:
+        path: ./
+
+functions:
+  ml_model:
+    image:
+      name: appimage
+    timeout: 90
+    memorySize: 4096
+    environment:
+      TORCH_HOME: /tmp/.ml_cache
+      TRANSFORMERS_CACHE: /tmp/.ml_cache/huggingface
+
+custom:
+  warmup:
+    MLModelWarmer:
+      enabled: true
+      name: ${self:service}-${self:provider.stage}-warmer
+      roleName: ${self:service}-${self:provider.stage}-warmer-role
+      events:
+        - schedule: rate(4 minutes)
+      concurrency: ${env:WARMER_CONCURRENCY, 2}
+      verbose: false
+      timeout: 100
+      payload:
+        source: KEEP_LAMBDA_WARM
+
+plugins:
+  - serverless-plugin-warmup

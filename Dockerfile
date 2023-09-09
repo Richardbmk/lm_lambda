@@ -19,4 +19,4 @@ COPY --from=builder ${LAMBDA_TASK_ROOT} ${LAMBDA_TASK_ROOT}
 
 COPY . ${LAMBDA_TASK_ROOT}
 
-CMD ["handler.handle"]
+CMD ["handler.handler"]

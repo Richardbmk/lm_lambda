@@ -12,4 +12,6 @@ def test_sentiment_is_predicted():
     })
   )
 
-  assert json.loads(response['Payload'].read().decode('utf-8'))["sentiment"] == "positive"
+  print(json.loads(response['Payload'].read().decode('utf-8')))
+
+  assert json.loads(response['Payload'].read().decode('utf-8'))['sentiment'] == 'positive'

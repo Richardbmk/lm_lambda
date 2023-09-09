@@ -7,7 +7,7 @@ LOGGER.setLevel(logging.INFO)
 
 model = SentimentModel()
 
-def handler(event, context):
+def lambda_handler(event, context):
   if event.get("source") == "KEEP_LAMBDA_WARM":
     LOGGER.info("No ML work to do. Just staying warm...")
     return "Keeping Lambda warm"
